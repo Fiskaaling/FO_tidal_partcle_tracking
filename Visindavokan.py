@@ -1,18 +1,22 @@
+mode = 'cython'
+print(f'Mode is on: {mode}. cython mode is fast while python mode is slower')
 from datetime import datetime
 import time
 import numpy as np
-import numpy.matlib as npm
 import pandas as pd
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib import  dates
 
 from particle_tracking_engine.particledata2 import particle_data
-from particle_tracking_engine.agent_simulation3 import agent_simulation
-from particle_tracking_engine.agent_simulation3 import A_landi
+if mode == 'cython':
+    from particle_tracking_engine.particle_tracking_cython import agent_simulation
+    from particle_tracking_engine.particle_tracking_cython import A_landi
+else:
+    from particle_tracking_engine.particle_tracking import agent_simulation
+    from particle_tracking_engine.particle_tracking import A_landi
+
 from particle_tracking_engine.plot_particle_FO import plotting_particles
 from matplotlib.widgets import Button,TextBox
-import IPython
 
 ##======== Run import data ==========================================
 

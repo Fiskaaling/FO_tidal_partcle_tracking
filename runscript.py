@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 
 from particle_tracking_engine.particledata2 import particle_data
 if mode == 'cython':
-    from particle_tracking_engine.agent_simulation3 import agent_simulation
-    from particle_tracking_engine.agent_simulation3 import A_landi
+    from particle_tracking_engine.particle_tracking_cython import agent_simulation
+    from particle_tracking_engine.particle_tracking_cython import A_landi
 else:
-    from particle_tracking_engine.agent_simulation3__ import agent_simulation
-    from particle_tracking_engine.agent_simulation3__ import A_landi
+    from particle_tracking_engine.particle_tracking import agent_simulation
+    from particle_tracking_engine.particle_tracking import A_landi
 
 from particle_tracking_engine.plot_particle_FO import plotting_particles
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         areas=area,
         run_time=t,
         dt=dt,
-        diff=True,
+        diff=False,
     )
 
     age = np.zeros((len(posx)))
