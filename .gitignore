@@ -1,0 +1,8 @@
+*swp
+.ycm_extra_conf.py
+__pycache__/
+*.c
+*.so
+*.html
+build/
+profile.txt
