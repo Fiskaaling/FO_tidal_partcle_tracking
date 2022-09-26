@@ -1,6 +1,6 @@
 # FO particle tracking model
 
-### A partcle tracking moduel forced by a Faroese barotropic mode of the regional oceanic modeling system (ROMS) with a 100 m resolution grid for the coastal region (Simonsen & Niclasen 2021). 
+### A particle tracking model forced by a Faroese barotropic mode of the regional oceanic modeling system (ROMS) with a 100 m resolution grid for the coastal region (Simonsen & Niclasen 2021). A detail description of the mechanis of the particle tracking model can be found in Kragesteen et al., (2018). 
 
 
 ## Table of contents
@@ -12,6 +12,7 @@
 * [Inspiration](#inspiration)
 * [License](#license)
 * [Contact](#contact)
+* [References](#references)
 
 
 ## General info
@@ -64,3 +65,6 @@ Copyright (c) 2020 TrondurJK
 ## Contact
 Created by [trondkraga@gmail.com](https://github.com/TrondurJK) - onkur heimasíða - feel free to contact me!
 
+## References
+    Simonsen, K., & Niclasen, B. A. (2021). Analysis of the energy potential of tidal streams on the Faroe Shelf. Renewable Energy, 163, 836-844.
+    Kragesteen, T. J., Simonsen, K., Visser, A. W., & Andersen, K. H. (2018). Identifying salmon lice transmission characteristics between Faroese salmon farms. Aquaculture Environment Interactions, 10, 49-60.
