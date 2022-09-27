@@ -125,7 +125,6 @@ if __name__ == '__main__':
                 self.initial =1
                 start_date_num = dates.date2num(start_date)
                 sim_time = np.linspace(start_date_num,start_date_num+(t+24*10)/24,int((t/dt)*0.01))
-                lines = []
 
                 dt_loop = sim_time[1] - sim_time[0]
                 times = sim_time[0] - dt_loop
@@ -146,6 +145,7 @@ if __name__ == '__main__':
                     end3 = time.time()
                     print(f'time to clean data : {end3 - start3}')
                     start0 = time.time()
+
                     for idx in num_particles:
 
                         if idx not in have_particles_enterd:
@@ -157,7 +157,8 @@ if __name__ == '__main__':
                             lines.extend(ax.plot(df_now_per_id.x.iloc[0::80], df_now_per_id.y.iloc[0::80], '-',c = cmap(random_color) ))
 
                         elif len(df_now_per_id.x)>0:
-                            for line, marker, idxx in zip(lines, markers, have_particles_enterd):
+
+                            for i,(line, marker, idxx) in enumerate(zip(lines, markers, have_particles_enterd)):
                                 df_now_per_id = df_now[df_now.id == idxx]
 
                                 x = df_now_per_id.x.iloc[0::80]
@@ -169,19 +170,25 @@ if __name__ == '__main__':
                                     marker.set_ydata(y_m)
                                 line.set_xdata(x)
                                 line.set_ydata(y)
+
                     end_0  =time.time()
                     print(f'to large if loop: {end_0 - start0}')
 
                     if len(have_particles_enterd)>0:
-                        for line, marker, idmix in zip(lines, markers, have_particles_enterd):
+                        remove_from_list = []
+                        for i,(line, marker, idmix) in enumerate(zip(lines, markers, have_particles_enterd)):
 
                             df_now_per_id = df_now[df_now.id==idmix]
 
                             if len(df_now_per_id.x)==0 and idmix not in have_particles_been_removed:
+                                remove_from_list.append(i)
                                 line.remove()
                                 marker.remove()
                                 have_particles_been_removed.append(idmix)
-
+                        for i in remove_from_list[::-1]:
+                            lines.pop(i)
+                            markers.pop(i)
+                            have_particles_enterd.pop(i)
                     date_disp = dates.num2date(times)
 
                     txt = ax.text(90, 1390, date_disp.strftime(("%m/%d/%Y, %H:%M")),fontsize=16)
