@@ -281,7 +281,7 @@ class agent_simulation:
 #                    else:
 #                        raise A_landi('Tú ert á landi')
             if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
-                if age >=72:
+                if age >=24*5.5 and age <=24*6:
                     counter += 1
             age += dt
 
