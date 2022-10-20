@@ -108,8 +108,8 @@ class plotting_particles:
             else:
                 fig.add_subplot(111)
 
-        Xlims = np.array([115, 595])
-        Ylims = np.array([793, 1200])
+        Xlims = np.array([0, 1088])
+        Ylims = np.array([0, 1488])
 
         ax.set_xlim(Xlims)
         ax.set_ylim(Ylims)
