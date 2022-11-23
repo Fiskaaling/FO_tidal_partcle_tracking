@@ -118,8 +118,8 @@ class plotting_particles:
 
         ax.imshow(self.FO_map, cmap=cmap)
 
-        for x, y in zip(data.x, data.y):
-            ax.plot(x, y, 'rx')
+        #for x, y in zip(data.x, data.y):
+        #    ax.plot(x, y, 'rx')
         plt.subplots_adjust(left=0.1,
                             bottom=0.1,
                             right=0.9,
@@ -128,8 +128,8 @@ class plotting_particles:
                             hspace=0.1)
         # ax[0].legend(loc="upper left", fontsize=15)
         fig.set_size_inches(11.69, 8.27)
-        plt.title('Á sjógv kl. 09 tann 07-okt-2022 og 35 tímar fram')
-        fig.savefig('Leiting_kl_09_35_seaborn.png', bbox_inches='tight')
+        plt.title('')
+        #fig.savefig('Leiting_kl_09_35_seaborn.png', bbox_inches='tight')
 
     def mark_A(self, areas):
 

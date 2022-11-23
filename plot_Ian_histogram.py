@@ -38,10 +38,10 @@ Land = np.where(DATA.MajM2>0, 1, 0)
 Plotting_particles = plotting_particles(Land)
 # Plotting_particles.plot_particle(x_track,y_track)
 for file in res:
-       fig,ax = plt.subplots()
-       ax.set_title(file)
+       #fig,ax = plt.subplots()
+       #ax.set_title(file)
        data = pd.read_csv(f'Data_Ian_project/{file}', index_col=0)
-       Plotting_particles.plot_sea_born_map(data=data,ax=ax)
+       #Plotting_particles.plot_sea_born_map(data=data,ax=ax,fig=fig)
 
 
        for i,(x_d,y_d) in enumerate(zip(x_definde_areas,y_definde_areas)):
@@ -65,8 +65,8 @@ for file in res:
 
        Xlims = np.array([0, 1088])
        Ylims = np.array([0, 1488])
-       ax.set_xlim(Xlims)
-       ax.set_ylim(Ylims)
+       #ax.set_xlim(Xlims)
+       #ax.set_ylim(Ylims)
 
 #fig = plt.figure(figsize=(6, 5), dpi=200)
 #left, bottom, width, height = 0.2, 0.1, 0.7, 0.8
@@ -152,8 +152,8 @@ df_area_all.drop('delay',axis=1).plot.bar(stacked=True,rot=45)
 plotdata = df_area_all.drop('delay',axis=1)
 stacked_data = plotdata.apply(lambda x: x*100/sum(x), axis=1)
 stacked_data.plot.bar(stacked=True,rot=45)
-
-plt.legend()
+plt.legend(loc='lower left', bbox_to_anchor=(1, 0.8))
+#plt.legend()
 plt.show()
 '''
 import matplotlib.pyplot as plt

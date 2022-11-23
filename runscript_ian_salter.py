@@ -29,7 +29,7 @@ if __name__ == '__main__':
     rh = 1  # how many times you want to realese agents - every hour
 
     # ======== pre define position and age of each partile beforehand =====
-    numpont = 50
+    numpont = 100
     data = particle_data(numpont=numpont)
 
     area = [data.IanSgrid]
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
         start2 = time.time()
         #========== Run all particles ===============
-
+        #TODO define box open and box close
         for x, y, a, x_t, y_t in zip(posx, posy, age, x_track, y_track):
             try:
                 output = runsim.run_particle(x, y, a,start_date)
