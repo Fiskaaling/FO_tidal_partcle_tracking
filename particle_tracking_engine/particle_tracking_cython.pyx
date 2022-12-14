@@ -28,6 +28,8 @@ class agent_simulation:
         run_time=1000,
         dt=0.05,
         diff=False,
+        open_box=0,
+        close_box=0
     ):
 
         '''params:
@@ -65,6 +67,9 @@ class agent_simulation:
             self.diff_fac = 0.
 
         self.ferd_mod = dtsek / DATA.dz
+        ##========= Hvussu leingi skal boxin vera opin og nær=========
+        self.open_box = open_box
+        self.close_box = close_box
 
         cdef int randseed = np.random.randint(0, 1000000)
         srand(randseed)
@@ -77,7 +82,7 @@ class agent_simulation:
         double posxi,
         double posyi,
         double age,
-        datetime startdate
+        datetime startdate,
         ):
 
         # Hvar eru vit
@@ -149,6 +154,10 @@ class agent_simulation:
         cdef int len_sim = len(range(start, end)) #self.len_sim
         #cdef int start = self.start
         #cdef int end = self.end
+
+        # Hvussu leingi skal sampli boxin vera opin
+        cdef double open_box = self.open_box
+        cdef double close_box = self.close_box
 
         #Variablar til at fylgja við trackinum
         cdef np.ndarray[np.double_t, ndim=1] X = np.empty((len_sim,), np.double)
@@ -280,10 +289,16 @@ class agent_simulation:
 
 #                    else:
 #                        raise A_landi('Tú ert á landi')
+
             if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
-                if age >=72:
+                if age >=open_box and age <=close_box:
                     counter += 1
             age += dt
+
+            #if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
+            #    if age >=72:
+            #        counter += 1
+            #age += dt
 
             X[X_Y_index] = posxi
             Y[X_Y_index] = posyi

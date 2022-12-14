@@ -22,7 +22,7 @@ from particle_tracking_engine.plot_particle_FO import plotting_particles
 
 if __name__ == '__main__':
 
-    t = 100  # Simulation time(hours)
+    t = 1000  # Simulation time(hours)
     dt = 0.005  # Timestep(hours)
     rh = 1  # how many times you want to realese agents - every hour
 
@@ -38,6 +38,8 @@ if __name__ == '__main__':
         run_time=t,
         dt=dt,
         diff=False,
+        open_box = 24*3,
+        close_box = 24 * 3
     )
 
     age = np.zeros((len(posx)))
