@@ -27,7 +27,7 @@ The project is created with:
 To run this project, you need to install Python. Python can be downloaded [here](https://www.python.org/downloads/).
 
 install requirments.txt with 
->pip install -r requirments.txt
+>pip install -r requirements.txt
 
 The model has two versions: i) one python version which is slow and ii) a cython version which is a lot faster.
 
