@@ -295,10 +295,6 @@ class agent_simulation:
                     counter += 1
             age += dt
 
-            #if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
-            #    if age >=72:
-            #        counter += 1
-            #age += dt
 
             X[X_Y_index] = posxi
             Y[X_Y_index] = posyi

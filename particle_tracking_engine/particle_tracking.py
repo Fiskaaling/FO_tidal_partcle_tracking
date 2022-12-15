@@ -12,7 +12,14 @@ class A_landi(Exception):
 class agent_simulation:
     '''Defines agent for particle tracking'''
 
-    def __init__(self,areas,run_time=1000,dt=0.05, diff=False,start=datetime(2000, 1, 1)):
+    def __init__(self,
+                 areas,
+                 run_time=1000,
+                 dt=0.05,
+                 diff=False,
+                 start=datetime(2000, 1, 1),
+                 open_box = 0,
+                 close_box = 0):
 
         '''params:
         posx: Array with positions of particles in X or east direction
@@ -64,7 +71,9 @@ class agent_simulation:
 
         self.per = np.array(DATA.per)
         self.per_constant = np.dot((2 * np.pi), 1/self.per) * self.dt
-
+        ##========= Hvussu leingi skal boxin vera opin og nær=========
+        self.open_box = open_box
+        self.close_box = close_box
 
     def run_particle(self, posxi, posyi, age,startdate=0):
         #======= Time initialization ======
@@ -209,7 +218,7 @@ class agent_simulation:
             # check if point is inside area
             # if self.area.contains(copoint):
             if A_use[int(round(fracty)),int(round(fractx))] == 2:
-                if age >=72:
+                if age >=self.open_box and age <=self.close_box:
                     counter += 1
             age += self.dt
 
