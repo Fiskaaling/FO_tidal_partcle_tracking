@@ -23,7 +23,7 @@ from particle_tracking_engine.plot_particle_FO import plotting_particles
 from multiprocessing import Pool
 from particle_tracking_engine.Tidal_data import tidal_data
 
-numpont =1000
+numpont =200
 daysdelay = 3
 data = particle_data(numpont=numpont)
 DATA = tidal_data()
@@ -44,6 +44,8 @@ class Sim_run:
             run_time=t,
             dt=dt,
             diff=True,
+            open_box = 24*(daysdelay-0.5),
+            close_box = 24*(daysdelay)
         )
 
 
@@ -66,7 +68,7 @@ def job(args):
             output = sim_run.runsim._run_particle(x,y,a)
         except A_landi:
             output = None
-        b_count.append(output)
+        b_count.append(output[0])
     return b_count
 
 
@@ -90,7 +92,7 @@ if __name__ == '__main__':
     posx = np.delete(posx, idx_2_remove)  # Position of Particles in X or East direction
     posy = np.delete(posy, idx_2_remove)
 
-    for start_date in start_dates[11:]:
+    for start_date in start_dates[0:1]:
         age = np.zeros((len(posx)))
         x_track = [[] for _ in posx]
         y_track = [[] for _ in posy]

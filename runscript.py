@@ -27,7 +27,7 @@ if __name__ == '__main__':
     rh = 1  # how many times you want to realese agents - every hour
 
     # ======== pre define position and age of each partile beforehand =====
-    data = particle_data(numpont=10)
+    data = particle_data(numpont=100)
     posx = npm.repmat(data.Aex, 1, rh).flatten('F')  # Position of Particles in X or East direction
     posy = npm.repmat(data.Aey, 1, rh).flatten('F')  # Position of Particles in Y or North direction
     area = [data.IanSgrid]
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         dt=dt,
         diff=False,
         open_box = 24*2,
-        close_box = 24 * 2
+        close_box = 24 * 2+24
     )
 
     age = np.zeros((len(posx)))
@@ -54,9 +54,10 @@ if __name__ == '__main__':
     for x, y, a, x_t, y_t in zip(posx, posy, age, x_track, y_track):
         try:
             output = runsim.run_particle(x, y, a,start_date)
-            x_t.append(output[1])
-            y_t.append(output[2])
-            a_count.append(output[0])
+            #print(runsim.X[:])
+            x_t.append(runsim.X.copy())
+            y_t.append(runsim.Y.copy())
+            a_count.append(output[0][0])
         except A_landi:
             x_t.append(np.array([x]))
             y_t.append(np.array([y]))
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     end2 = time.time()
     print(f'time taken all particles: {end2 - start2}')
     print(np.size(np.nonzero(a_count)))
-    print(np.shape(a_count))
+    print(np.shape(a_count[0]))
     print(a_count)
 
     Plotting_particles = plotting_particles(runsim.A,area)

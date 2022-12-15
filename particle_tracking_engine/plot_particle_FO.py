@@ -95,7 +95,7 @@ class plotting_particles:
 
         ax.set_xlim(Xlims)
         ax.set_ylim(Ylims)
-        sns.kdeplot(data=data, x='x', y='y', color='r', shade=True,
+        sns.kdeplot(data=data, x='x', y='y', color='r', fill=True,
                     cmap="Reds", thresh=.3, alpha=0.5);
 
         ax.imshow(self.FO_map, cmap=cmap)
