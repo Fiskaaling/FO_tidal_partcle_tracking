@@ -28,7 +28,8 @@ class agent_simulation:
         run_time=1000,
         dt=0.05,
         diff=False,
-        start=datetime(2000, 1, 1)
+        open_box=0,
+        close_box=0
     ):
 
         '''params:
@@ -48,7 +49,8 @@ class agent_simulation:
         # TODO Bárur N. sigur at start punkti í simulering er 1 jan 2000
         # and sets X, Y, AGE
         print(run_time)
-        self.set_sim_period(start, run_time) 
+        self.run_time = run_time
+
 
         # Land og POI matrica land hevur virði 0 
         self.A = np.where(DATA.MajM2>0, 1, 0)
@@ -65,33 +67,23 @@ class agent_simulation:
             self.diff_fac = 0.
 
         self.ferd_mod = dtsek / DATA.dz
+        ##========= Hvussu leingi skal boxin vera opin og nær=========
+        self.open_box = open_box
+        self.close_box = close_box
 
         cdef int randseed = np.random.randint(0, 1000000)
         srand(randseed)
 
-    def run_particle(
-            self, 
-            posxi,
-            posyi,
-            age,
-            startdate
-            ):
-
-        self.set_sim_period(startdate)
-
-        counter = self._run_particle(posxi, posyi, age)
-
-        return counter, self.X.copy(), self.Y.copy(), self.AGE.copy()
-
     @cython.wraparound(False)  # turn off negative index wrapping for entire function
     @cython.boundscheck(False) # turn off bounds-checking for entire function
     @cython.cdivision(True)
-    def _run_particle(
+    def run_particle(
         self,
         double posxi,
         double posyi,
-        double age
-    ):
+        double age,
+        datetime startdate,
+        ):
 
         # Hvar eru vit
         cdef int xi_old, yi_old, xi, yi, x_initial, y_initial
@@ -156,14 +148,21 @@ class agent_simulation:
         cdef double diff_fac = self.diff_fac
 
         # hvussu lang er simoleringin
-        cdef int len_sim = self.len_sim
-        cdef int start = self.start
-        cdef int end = self.end
+        cdef int start = (startdate - datetime(2000, 1, 1,0,0)).total_seconds()/(60*60)/self.dt
+
+        cdef int end = start + int(self.run_time/self.dt)
+        cdef int len_sim = len(range(start, end)) #self.len_sim
+        #cdef int start = self.start
+        #cdef int end = self.end
+
+        # Hvussu leingi skal sampli boxin vera opin
+        cdef double open_box = self.open_box
+        cdef double close_box = self.close_box
 
         #Variablar til at fylgja við trackinum
-        cdef np.ndarray[np.double_t, ndim=1] X = self.X
-        cdef np.ndarray[np.double_t, ndim=1] Y = self.Y
-        cdef np.ndarray[np.double_t, ndim=1] AGE = self.AGE
+        cdef np.ndarray[np.double_t, ndim=1] X = np.empty((len_sim,), np.double)
+        cdef np.ndarray[np.double_t, ndim=1] Y = np.empty((len_sim,), np.double)
+        cdef np.ndarray[np.double_t, ndim=1] AGE = np.empty((len_sim,), np.double)
 
         cdef int X_Y_index = 0
         cdef int counter = 0
@@ -288,13 +287,18 @@ class agent_simulation:
                             fracty = 1 - fracty
                             posyi = yi + fracty
 
-                    else:
-                        raise A_landi('Tú ert á landi')
+#                    else:
+#                        raise A_landi('Tú ert á landi')
 
             if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
-                if 24*5.5 <= age <= 24*6:
+                if age >=open_box and age <=close_box:
                     counter += 1
             age += dt
+
+            #if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
+            #    if age >=72:
+            #        counter += 1
+            #age += dt
 
             X[X_Y_index] = posxi
             Y[X_Y_index] = posyi
@@ -304,7 +308,7 @@ class agent_simulation:
         Y[X_Y_index:] = 0
         AGE[X_Y_index:] = 0
 
-        return counter
+        return counter,X,Y,AGE
 
     def set_sim_period(self, start: datetime, run_time:float=None) -> None:
         ''' set sim periode '''
