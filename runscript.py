@@ -27,7 +27,7 @@ if __name__ == '__main__':
     rh = 1  # how many times you want to realese agents - every hour
 
     # ======== pre define position and age of each partile beforehand =====
-    data = particle_data(numpont=100)
+    data = particle_data(numpont=10)
     posx = npm.repmat(data.Aex, 1, rh).flatten('F')  # Position of Particles in X or East direction
     posy = npm.repmat(data.Aey, 1, rh).flatten('F')  # Position of Particles in Y or North direction
     area = [data.IanSgrid]
@@ -57,7 +57,7 @@ if __name__ == '__main__':
             #print(runsim.X[:])
             x_t.append(runsim.X.copy())
             y_t.append(runsim.Y.copy())
-            a_count.append(output[0][0])
+            a_count.append(output[0])
         except A_landi:
             x_t.append(np.array([x]))
             y_t.append(np.array([y]))

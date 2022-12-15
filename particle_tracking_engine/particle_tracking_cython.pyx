@@ -266,24 +266,24 @@ class agent_simulation:
 
                     #= == == == == == == == == == = X position == == == == == == == == == == == == =
                     if land == 1:
-                        if (fractx - 0.5) * dx > 0:
+                        if (fractx - .5) * (fractx - dx - 0.5) < 0:
                             fractx = 1 - fractx
                             posxi = xi + fractx
 
-                        if (fracty - 0.5) * dy > 0:
+                        if (fracty - .5) * (fracty - dy - 0.5) < 0:
                             fracty = 1 - fracty
                             posyi = yi + fracty
 
                     elif land == 2:
                         if A_use[int(round_c(fracty)+2*(1 - round_c(fractx)))] == 0:
-                            fractx = 1 - fractx
-                            posxi = xi + fractx
-                        elif A_use[int(1 - round_c(fracty)+2*round_c(fractx))] == 0:
                             fracty = 1 - fracty
                             posyi = yi + fracty
+                        elif A_use[int(1 - round_c(fracty)+2*round_c(fractx))] == 0:
+                            fractx = 1 - fractx
+                            posxi = xi + fractx
                         else:
+                            print(A_use,posxi,posyi)
                             print('hetta burdi ikki hent')
-                            #raise Exception('hettar burda ikki hent')
 
                     elif land == 3:
                         if A_use[int(round_c(fracty)+2*(1 - round_c(fractx)))] == 0:
@@ -311,7 +311,7 @@ class agent_simulation:
         Y[X_Y_index:] = 0
         AGE[X_Y_index:] = 0
 
-        return counter, self.X.copy(), self.Y.copy(), self.AGE.copy()
+        return counter #, self.X.copy(), self.Y.copy(), self.AGE.copy()
 
     def set_sim_period(self, start: datetime, run_time:float=None) -> None:
         ''' set sim periode '''

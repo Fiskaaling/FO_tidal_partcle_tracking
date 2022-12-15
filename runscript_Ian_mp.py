@@ -68,7 +68,7 @@ def job(args):
             output = sim_run.runsim._run_particle(x,y,a)
         except A_landi:
             output = None
-        b_count.append(output[0])
+        b_count.append(output)
     return b_count
 
 

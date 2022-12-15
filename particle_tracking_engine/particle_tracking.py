@@ -83,9 +83,9 @@ class agent_simulation:
         len_sim = len(range(start, end)) #self.len_sim
         #=================================
         xi_old, yi_old = 0, 0
-        X = []
-        Y = []
-        AGE = []
+        self.X = []
+        self.Y = []
+        self.AGE = []
         if self.diff:
             rand = (
                 x 
@@ -184,21 +184,21 @@ class agent_simulation:
 
                 #= == == == == == == == == == = X position == == == == == == == == == == == == =
                 if land == 1:
-                    if (fractx - 0.5) * dx > 0:
+                    if (fractx - .5) * (fractx - dx - 0.5) < 0:
                         fractx = 1 - fractx
                         posxi = xi + fractx
 
-                    if (fracty - 0.5) * dy > 0:
+                    if (fracty - .5) * (fracty - dy - 0.5) < 0:
                         fracty = 1 - fracty
                         posyi = yi + fracty
 
                 elif land == 2:
                     if A_use[int(round(fracty)), 1 - int(round(fractx))] == 0:
-                        fractx = 1 - fractx
-                        posxi = xi + fractx
-                    elif A_use[1 - int(round(fracty)), int(round(fractx))] == 0:
                         fracty = 1 - fracty
                         posyi = yi + fracty
+                    elif A_use[1 - int(round(fracty)), int(round(fractx))] == 0:
+                        fractx = 1 - fractx
+                        posxi = xi + fractx
                     else:
                         raise Exception('hettar burda ikki hent')
 
@@ -222,11 +222,11 @@ class agent_simulation:
                     counter += 1
             age += self.dt
 
-            X.append(posxi)
-            Y.append(posyi)
-            AGE.append(age)
+            self.X.append(posxi)
+            self.Y.append(posyi)
+            self.AGE.append(age)
 
-        return counter,X,Y
+        return counter, self.X.copy(), self.Y.copy(), self.AGE.copy()
 
     def set_sim_period(self, start: datetime, run_time:float=None) -> None:
         ''' set sim periode '''
