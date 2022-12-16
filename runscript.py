@@ -1,4 +1,4 @@
-mode = 'python'
+mode = 'cython'
 print(f'Mode is on: {mode}. cython mode is fast while python mode is slower')
 import time
 from datetime import datetime
