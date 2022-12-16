@@ -182,7 +182,9 @@ class agent_simulation:
             #= == == == == = Tjek if Particles are on land or not == == == == == == ==
             #  eru vit nær við land
             if land and A_use[int(round(fracty)), int(round(fractx))] == 0:
-
+                land = 0
+                A_use = self.A[yi:yi + 2, xi:xi + 2]
+                land = (A_use == 0).sum()
                 #= == == == == == == == == == = X position == == == == == == == == == == == == =
                 if land == 1:
                     if (fractx - .5) * (fractx - dx - 0.5) < 0:
@@ -204,6 +206,7 @@ class agent_simulation:
                         if (fractx - .5) * (fractx - dx - 0.5) < 0:
                             fractx = 1 - fractx
                             posxi = xi + fractx
+
                         if (fracty - .5) * (fracty - dy - 0.5) < 0:
                             fracty = 1 - fracty
                             posyi = yi + fracty

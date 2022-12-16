@@ -307,8 +307,8 @@ class agent_simulation:
                             fracty = 1 - fracty
                             posyi = yi + fracty
 
-#                    else:
-#                        raise A_landi('Tú ert á landi')
+                    else:
+                        raise A_landi('Tú ert á landi')
 
             if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
                 if age >=open_box and age <=close_box:
