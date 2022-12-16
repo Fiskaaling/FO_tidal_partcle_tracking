@@ -118,6 +118,8 @@ class agent_simulation:
             if xi != xi_old or yi != yi_old:
 
                 xi_old, yi_old = xi, yi
+                if yi<2 or xi<2 or yi>1486 or xi>1086:
+                    break
 
                 try:
                     M_u1_use = self.M_u1[:, yi:yi+2, xi:xi+2]
@@ -160,7 +162,6 @@ class agent_simulation:
 
             vec_x = np.array([1-fractx, fractx])
             vec_y = np.array([1-fracty, fracty])
-
             ux = np.dot(vec_y, np.dot(vec_x, u_all))
             # = == == == == == == = y position == == == == == == == == =
             vy = np.dot(vec_y, np.dot(vec_x, v_all))
@@ -200,7 +201,14 @@ class agent_simulation:
                         fractx = 1 - fractx
                         posxi = xi + fractx
                     else:
-                        raise Exception('hettar burda ikki hent')
+                        if (fractx - .5) * (fractx - dx - 0.5) < 0:
+                            fractx = 1 - fractx
+                            posxi = xi + fractx
+                        if (fracty - .5) * (fracty - dy - 0.5) < 0:
+                            fracty = 1 - fracty
+                            posyi = yi + fracty
+
+                        #raise Exception('hettar burda ikki hent')
 
                 elif land == 3:
                     if A_use[int(round(fracty)), 1 - int(round(fractx))] == 0:

@@ -262,6 +262,14 @@ class agent_simulation:
 
             #  eru vit nær við land/ farin á land
             if land:
+                land = 0
+                for i2 in range(2):
+                    for i3 in range(2):
+                        temp_int = A[yi+i2, xi+i3]
+                        A_use[i2+2*i3] = temp_int
+                        if temp_int == 0:
+                            land += 1
+
                 if A_use[int(round_c(fracty)+2*round_c(fractx))] == 0:
 
                     #= == == == == == == == == == = X position == == == == == == == == == == == == =
@@ -282,8 +290,14 @@ class agent_simulation:
                             fractx = 1 - fractx
                             posxi = xi + fractx
                         else:
-                            print(A_use,posxi,posyi)
-                            print('hetta burdi ikki hent')
+                            if (fractx - .5) * (fractx - dx - 0.5) < 0:
+                                fractx = 1 - fractx
+                                posxi = xi + fractx
+
+                            if (fracty - .5) * (fracty - dy - 0.5) < 0:
+                                fracty = 1 - fracty
+                                posyi = yi + fracty
+
 
                     elif land == 3:
                         if A_use[int(round_c(fracty)+2*(1 - round_c(fractx)))] == 0:
