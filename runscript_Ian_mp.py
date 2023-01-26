@@ -23,7 +23,7 @@ from particle_tracking_engine.plot_particle_FO import plotting_particles
 from multiprocessing import Pool
 from particle_tracking_engine.Tidal_data import tidal_data
 
-numpont =100
+numpont =1000
 daysdelay = 3
 data = particle_data(numpont=numpont)
 DATA = tidal_data()
@@ -89,7 +89,7 @@ if __name__ == '__main__':
             idx_2_remove.append(idx)
     posx = np.delete(posx, idx_2_remove)  # Position of Particles in X or East direction
     posy = np.delete(posy, idx_2_remove)
-
+    print(len(posx),"number of particles")
     for start_date in start_dates[0:1]:
         data_merge = pd.DataFrame([])
         num_times_release = np.arange(12)
