@@ -42,8 +42,8 @@ To install cython go [here](https://cython.readthedocs.io/en/stable/src/quicksta
 
 
 
-run 
->"python setup.py build_ext --inplace" to run cython version.
+navigate to the particle_tracking_engine and run: 
+>"python setup.py build_ext --inplace" or  to run cython version.
 
 The repository can be downloaded to your local environment, where running the file runscript.py will simulate a simple test run where no external data is needed. Be aware that matplotlib 3.3.2 or newer is needed.
 
