@@ -27,10 +27,10 @@ if __name__ == '__main__':
     rh = 1  # how many times you want to realese agents - every hour
 
     # ======== pre define position and age of each partile beforehand =====
-    data = particle_data(numpont=50)
+    data = particle_data(numpont=10)
     posx = npm.repmat(data.A89x, 1, rh).flatten('F')  # Position of Particles in X or East direction
     posy = npm.repmat(data.A89y, 1, rh).flatten('F')  # Position of Particles in Y or North direction
-    area =Teitur_special(A_no,[]) #    [data.A89c] # [data.IanSgrid]
+    area = [data.A89c] # [data.IanSgrid] # Teitur_special(A_no,[]) #
     # = == == == == == Particle Tracking simutaion == == == == == == == == == == == == == == == ==
     print(f'dt: {dt}')
     runsim = agent_simulation(
