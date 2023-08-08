@@ -85,31 +85,28 @@ class plotting_particles:
         for x, y in zip(x_pos, y_pos):
             ax.plot(x, y, 'rx')
 
-    def plot_sea_born_map(self, data, fig=None, ax=None):
+    def plot_sea_born_map(self, data,fig=None, ax=None):
 
         if self.area == None:
             cmap = Cmap.ListedColormap(['gray', 'white'])
         else:
-            cmap = Cmap.ListedColormap(['green', 'white', 'blue'])
+            cmap = Cmap.ListedColormap(['green', 'white', 'red'])
 
         if ax is None:
             if fig is None:
                 fig, ax = plt.subplots()
             else:
                 fig.add_subplot(111)
-        #cmap = Cmap.ListedColormap(['green', 'white', 'red'])
-        #fig, ax = plt.subplots()
 
         Xlims = np.array([0, 1088])
         Ylims = np.array([0, 1488])
 
         ax.set_xlim(Xlims)
         ax.set_ylim(Ylims)
-
         sns.kdeplot(data=data, x='x', y='y', color='r', fill=True,
-                    cmap="Reds", thresh=.35, alpha=0.2);
+                    cmap="Reds", thresh=.3, alpha=0.5);
 
-
+        ax.imshow(self.FO_map, cmap=cmap)
 
         for x, y in zip(data.x, data.y):
             ax.plot(x, y, 'ro',markersize=0.1,alpha=0.4)

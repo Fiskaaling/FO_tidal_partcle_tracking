@@ -77,10 +77,12 @@ class agent_simulation:
 
     def run_particle(self, posxi, posyi, age,startdate=0):
         #======= Time initialization ======
+
         start = int( (startdate - datetime(2000, 1, 1,0,0)).total_seconds()/(60*60)/self.dt )
 
         end = start + int(self.run_time/self.dt)
         len_sim = len(range(start, end)) #self.len_sim
+
         #=================================
         xi_old, yi_old = 0, 0
         self.X = []
@@ -111,8 +113,14 @@ class agent_simulation:
         xi = int(xi)
         yi, fracty = divmod(posyi, 1)
         yi = int(yi)
+        #Check dirction of time
+        if (end-start)>0:
+            time_direction = 1
+        else:
+            time_direction = -1
 
-        for t in range(start,end):
+        for t in range(start,end,time_direction):
+
             age += self.dt
 
             if xi != xi_old or yi != yi_old:
@@ -165,6 +173,7 @@ class agent_simulation:
             ux = np.dot(vec_y, np.dot(vec_x, u_all))
             # = == == == == == == = y position == == == == == == == == =
             vy = np.dot(vec_y, np.dot(vec_x, v_all))
+
 
             # = == == == velosity profile == == == == == == =
             dx = ux * ferd_mod + next(rand)

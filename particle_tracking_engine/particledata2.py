@@ -613,6 +613,8 @@ class particle_data:
             Aall_posx1[yy, :] = np.array(np.linspace(Aall_posx[0, yy], Aall_posx[1, yy], numpont))
             Aall_posy1[yy, :] = np.array(np.linspace(Aall_posy[0, yy], Aall_posy[1, yy], numpont))
 
+
+
         self.Aall_posx = Aall_posx1
         self.Aall_posy = Aall_posy1
 
@@ -660,9 +662,10 @@ class particle_data:
 
 
         # = == == == == == == == == == == == == Sørvágsfjørður == == == == == == == == =
-        lonlat = pd.read_csv('Aliøkir/Ian_sampling.csv')
+        lonlat = pd.read_csv('Aliøkir/Ian_sampling_onepoint.csv') #Ian_sampling_position_til_birgittu_app_area_300m.csv')
         self.IanSgrid = geo2grid(lonlat['lng'].values, lonlat['lat'].values)
-        self.IanScoord = [(self.SVgrid[0][i],self.SVgrid[1][i]) for i in range(len(self.SVgrid[0]))]
+        #self.IanScoord = [(self.IanSgrid[0][i],self.IanSgrid[1][i]) for i in range(len(self.IanSgrid[0]))]
+
 
 
     # #= == == == == == == = Hvalba A100 == == == == == == == == == =
