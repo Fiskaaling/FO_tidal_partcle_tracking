@@ -22,24 +22,24 @@ from particle_tracking_engine.plot_particle_FO import plotting_particles
 
 if __name__ == '__main__':
 
-    t = 1000  # Simulation time(hours)
+    t = 100  # Simulation time(hours)
     dt = 0.005  # Timestep(hours)
     rh = 1  # how many times you want to realese agents - every hour
 
     # ======== pre define position and age of each partile beforehand =====
-    data = particle_data(numpont=10)
-    posx = npm.repmat(data.Aex, 1, rh).flatten('F')  # Position of Particles in X or East direction
-    posy = npm.repmat(data.Aey, 1, rh).flatten('F')  # Position of Particles in Y or North direction
-    area = [data.IanSgrid]
+    data = particle_data(numpont=20)
+    posx = npm.repmat(data.A89x, 1, rh).flatten('F')  # Position of Particles in X or East direction
+    posy = npm.repmat(data.A89y, 1, rh).flatten('F')  # Position of Particles in Y or North direction
+    area = [data.A89c] # [data.IanSgrid] # Teitur_special(A_no,[]) #
     # = == == == == == Particle Tracking simutaion == == == == == == == == == == == == == == == ==
     print(f'dt: {dt}')
     runsim = agent_simulation(
         areas=area,
         run_time=t,
         dt=dt,
-        diff=False,
-        open_box = 24*3,
-        close_box = 24 * 3
+        diff=True,
+        open_box = 24*1,
+        close_box = 24 * 1+24*10
     )
 
     age = np.zeros((len(posx)))
@@ -50,12 +50,13 @@ if __name__ == '__main__':
 
     start2 = time.time()
     #========== Run all particles ===============
-    start_date = datetime(2000, 1, 1)
+    start_date = datetime(2000, 4, 1)
     for x, y, a, x_t, y_t in zip(posx, posy, age, x_track, y_track):
         try:
             output = runsim.run_particle(x, y, a,start_date)
-            x_t.append(output[1])
-            y_t.append(output[2])
+            #print(runsim.X[:])
+            x_t.append(runsim.X.copy())
+            y_t.append(runsim.Y.copy())
             a_count.append(output[0])
         except A_landi:
             x_t.append(np.array([x]))
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     end2 = time.time()
     print(f'time taken all particles: {end2 - start2}')
     print(np.size(np.nonzero(a_count)))
-    print(np.shape(a_count))
+    print(np.shape(a_count[0]))
     print(a_count)
 
     Plotting_particles = plotting_particles(runsim.A,area)

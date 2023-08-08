@@ -31,8 +31,8 @@ class plotting_particles:
             else:
                 fig.add_subplot(111)
 
-        Xlims = np.array([115, 595])
-        Ylims = np.array([793, 1200])
+        Xlims = np.array([0, 1088])
+        Ylims = np.array([0, 1488])
 
         ax.set_xlim(Xlims)
         ax.set_ylim(Ylims)
@@ -45,16 +45,6 @@ class plotting_particles:
         for x, y in zip(x_track, y_track):
             ax.plot(x[0], y[0], '.', markersize=0.2)
             ax.plot(x[0][0], y[0][0], 'rx')
-        plt.subplots_adjust(left=0.1,
-                            bottom=0.1,
-                            right=0.9,
-                            top=0.9,
-                            wspace=0.05,
-                            hspace=0.1)
-        # ax[0].legend(loc="upper left", fontsize=15)
-        fig.set_size_inches(11.69, 8.27)
-        plt.title('Á sjógv kl. 09 tann 07-okt-2022 og 35 tímar fram')
-        fig.savefig('Leiting_kl_09_35.png', bbox_inches='tight')
 
     def plot_particle_tracks(self, x_track, y_track, timestamp=0,color='blue', fig=None, ax=None):
 
@@ -118,19 +108,12 @@ class plotting_particles:
 
         ax.imshow(self.FO_map, cmap=cmap)
 
-        #for x, y in zip(data.x, data.y):
-        #    ax.plot(x, y, 'rx')
-        plt.subplots_adjust(left=0.1,
-                            bottom=0.1,
-                            right=0.9,
-                            top=0.9,
-                            wspace=0.05,
-                            hspace=0.1)
-        # ax[0].legend(loc="upper left", fontsize=15)
-        fig.set_size_inches(11.69, 8.27)
-        plt.title('')
-        #fig.savefig('Leiting_kl_09_35_seaborn.png', bbox_inches='tight')
-
+        for x, y in zip(data.x, data.y):
+            ax.plot(x, y, 'ro',markersize=0.1,alpha=0.4)
+        ax.imshow(self.FO_map, cmap=cmap)
+        ax.annotate("Sampling box", xy=(617, 787), xytext=(100, 810),
+                    arrowprops=dict(facecolor='black', edgecolor='black'))
+        #maps.set_zorder(20)
     def mark_A(self, areas):
 
         for i, areas in enumerate(areas):

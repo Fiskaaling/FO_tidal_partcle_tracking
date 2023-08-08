@@ -12,7 +12,14 @@ class A_landi(Exception):
 class agent_simulation:
     '''Defines agent for particle tracking'''
 
-    def __init__(self,areas,run_time=1000,dt=0.05, diff=False,start=datetime(2000, 1, 1)):
+    def __init__(self,
+                 areas,
+                 run_time=1000,
+                 dt=0.05,
+                 diff=False,
+                 start=datetime(2000, 1, 1),
+                 open_box = 0,
+                 close_box = 0):
 
         '''params:
         posx: Array with positions of particles in X or east direction
@@ -64,7 +71,9 @@ class agent_simulation:
 
         self.per = np.array(DATA.per)
         self.per_constant = np.dot((2 * np.pi), 1/self.per) * self.dt
-
+        ##========= Hvussu leingi skal boxin vera opin og nær=========
+        self.open_box = open_box
+        self.close_box = close_box
 
     def run_particle(self, posxi, posyi, age,startdate=0):
         #======= Time initialization ======
@@ -74,9 +83,9 @@ class agent_simulation:
         len_sim = len(range(start, end)) #self.len_sim
         #=================================
         xi_old, yi_old = 0, 0
-        X = []
-        Y = []
-        AGE = []
+        self.X = []
+        self.Y = []
+        self.AGE = []
         if self.diff:
             rand = (
                 x 
@@ -109,6 +118,8 @@ class agent_simulation:
             if xi != xi_old or yi != yi_old:
 
                 xi_old, yi_old = xi, yi
+                if yi<2 or xi<2 or yi>1486 or xi>1086:
+                    break
 
                 try:
                     M_u1_use = self.M_u1[:, yi:yi+2, xi:xi+2]
@@ -151,7 +162,6 @@ class agent_simulation:
 
             vec_x = np.array([1-fractx, fractx])
             vec_y = np.array([1-fracty, fracty])
-
             ux = np.dot(vec_y, np.dot(vec_x, u_all))
             # = == == == == == == = y position == == == == == == == == =
             vy = np.dot(vec_y, np.dot(vec_x, v_all))
@@ -172,26 +182,36 @@ class agent_simulation:
             #= == == == == = Tjek if Particles are on land or not == == == == == == ==
             #  eru vit nær við land
             if land and A_use[int(round(fracty)), int(round(fractx))] == 0:
-
+                land = 0
+                A_use = self.A[yi:yi + 2, xi:xi + 2]
+                land = (A_use == 0).sum()
                 #= == == == == == == == == == = X position == == == == == == == == == == == == =
                 if land == 1:
-                    if (fractx - 0.5) * dx > 0:
+                    if (fractx - .5) * (fractx - dx - 0.5) < 0:
                         fractx = 1 - fractx
                         posxi = xi + fractx
 
-                    if (fracty - 0.5) * dy > 0:
+                    if (fracty - .5) * (fracty - dy - 0.5) < 0:
                         fracty = 1 - fracty
                         posyi = yi + fracty
 
                 elif land == 2:
                     if A_use[int(round(fracty)), 1 - int(round(fractx))] == 0:
-                        fractx = 1 - fractx
-                        posxi = xi + fractx
-                    elif A_use[1 - int(round(fracty)), int(round(fractx))] == 0:
                         fracty = 1 - fracty
                         posyi = yi + fracty
+                    elif A_use[1 - int(round(fracty)), int(round(fractx))] == 0:
+                        fractx = 1 - fractx
+                        posxi = xi + fractx
                     else:
-                        raise Exception('hettar burda ikki hent')
+                        if (fractx - .5) * (fractx - dx - 0.5) < 0:
+                            fractx = 1 - fractx
+                            posxi = xi + fractx
+
+                        if (fracty - .5) * (fracty - dy - 0.5) < 0:
+                            fracty = 1 - fracty
+                            posyi = yi + fracty
+
+                        #raise Exception('hettar burda ikki hent')
 
                 elif land == 3:
                     if A_use[int(round(fracty)), 1 - int(round(fractx))] == 0:
@@ -209,15 +229,15 @@ class agent_simulation:
             # check if point is inside area
             # if self.area.contains(copoint):
             if A_use[int(round(fracty)),int(round(fractx))] == 2:
-                if age >=72:
+                if age >=self.open_box and age <=self.close_box:
                     counter += 1
             age += self.dt
 
-            X.append(posxi)
-            Y.append(posyi)
-            AGE.append(age)
+            self.X.append(posxi)
+            self.Y.append(posyi)
+            self.AGE.append(age)
 
-        return counter,X,Y
+        return counter, self.X.copy(), self.Y.copy(), self.AGE.copy()
 
     def set_sim_period(self, start: datetime, run_time:float=None) -> None:
         ''' set sim periode '''

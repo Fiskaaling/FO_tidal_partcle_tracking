@@ -74,16 +74,29 @@ class agent_simulation:
         cdef int randseed = np.random.randint(0, 1000000)
         srand(randseed)
 
+    def run_particle(
+           self,
+           posxi,
+           posyi,
+           age,
+           startdate
+           ):
+
+       self.set_sim_period(startdate)
+
+       counter = self._run_particle(posxi, posyi, age)
+
+       return counter, self.X.copy(), self.Y.copy(), self.AGE.copy()
+
     @cython.wraparound(False)  # turn off negative index wrapping for entire function
     @cython.boundscheck(False) # turn off bounds-checking for entire function
     @cython.cdivision(True)
-    def run_particle(
+    def _run_particle(
         self,
         double posxi,
         double posyi,
-        double age,
-        datetime startdate,
-        ):
+        double age
+    ):
 
         # Hvar eru vit
         cdef int xi_old, yi_old, xi, yi, x_initial, y_initial
@@ -147,22 +160,15 @@ class agent_simulation:
         cdef int diff = self.diff
         cdef double diff_fac = self.diff_fac
 
-        # hvussu lang er simoleringin
-        cdef int start = (startdate - datetime(2000, 1, 1,0,0)).total_seconds()/(60*60)/self.dt
-
-        cdef int end = start + int(self.run_time/self.dt)
-        cdef int len_sim = len(range(start, end)) #self.len_sim
-        #cdef int start = self.start
-        #cdef int end = self.end
 
         # Hvussu leingi skal sampli boxin vera opin
         cdef double open_box = self.open_box
         cdef double close_box = self.close_box
 
         #Variablar til at fylgja við trackinum
-        cdef np.ndarray[np.double_t, ndim=1] X = np.empty((len_sim,), np.double)
-        cdef np.ndarray[np.double_t, ndim=1] Y = np.empty((len_sim,), np.double)
-        cdef np.ndarray[np.double_t, ndim=1] AGE = np.empty((len_sim,), np.double)
+        cdef np.ndarray[np.double_t, ndim=1] X = self.X
+        cdef np.ndarray[np.double_t, ndim=1] Y = self.Y
+        cdef np.ndarray[np.double_t, ndim=1] AGE = self.AGE
 
         cdef int X_Y_index = 0
         cdef int counter = 0
@@ -174,7 +180,7 @@ class agent_simulation:
         yi = int(posyi)
 
         # Main loop
-        for t in range(start, end):
+        for t in range(self.start, self.end):
 
             # updatera local variablar um vit skifta kvadrat
             if xi != xi_old or yi != yi_old:
@@ -256,28 +262,42 @@ class agent_simulation:
 
             #  eru vit nær við land/ farin á land
             if land:
+                land = 0
+                for i2 in range(2):
+                    for i3 in range(2):
+                        temp_int = A[yi+i2, xi+i3]
+                        A_use[i2+2*i3] = temp_int
+                        if temp_int == 0:
+                            land += 1
+
                 if A_use[int(round_c(fracty)+2*round_c(fractx))] == 0:
 
                     #= == == == == == == == == == = X position == == == == == == == == == == == == =
                     if land == 1:
-                        if (fractx - 0.5) * dx > 0:
+                        if (fractx - .5) * (fractx - dx - 0.5) < 0:
                             fractx = 1 - fractx
                             posxi = xi + fractx
 
-                        if (fracty - 0.5) * dy > 0:
+                        if (fracty - .5) * (fracty - dy - 0.5) < 0:
                             fracty = 1 - fracty
                             posyi = yi + fracty
 
                     elif land == 2:
                         if A_use[int(round_c(fracty)+2*(1 - round_c(fractx)))] == 0:
-                            fractx = 1 - fractx
-                            posxi = xi + fractx
-                        elif A_use[int(1 - round_c(fracty)+2*round_c(fractx))] == 0:
                             fracty = 1 - fracty
                             posyi = yi + fracty
+                        elif A_use[int(1 - round_c(fracty)+2*round_c(fractx))] == 0:
+                            fractx = 1 - fractx
+                            posxi = xi + fractx
                         else:
-                            print('hetta burdi ikki hent')
-                            #raise Exception('hettar burda ikki hent')
+                            if (fractx - .5) * (fractx - dx - 0.5) < 0:
+                                fractx = 1 - fractx
+                                posxi = xi + fractx
+
+                            if (fracty - .5) * (fracty - dy - 0.5) < 0:
+                                fracty = 1 - fracty
+                                posyi = yi + fracty
+
 
                     elif land == 3:
                         if A_use[int(round_c(fracty)+2*(1 - round_c(fractx)))] == 0:
@@ -287,39 +307,41 @@ class agent_simulation:
                             fracty = 1 - fracty
                             posyi = yi + fracty
 
-#                    else:
-#                        raise A_landi('Tú ert á landi')
+                    else:
+                        raise A_landi('Tú ert á landi')
 
             if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
                 if age >=open_box and age <=close_box:
                     counter += 1
             age += dt
 
-            #if A_use[int(round_c(fracty)+2*round_c(fractx))] == 2:
-            #    if age >=72:
-            #        counter += 1
-            #age += dt
 
             X[X_Y_index] = posxi
             Y[X_Y_index] = posyi
             AGE[X_Y_index] = age
             X_Y_index += 1
+
         X[X_Y_index:] = 0
         Y[X_Y_index:] = 0
         AGE[X_Y_index:] = 0
 
-        return counter,X,Y,AGE
+        return counter #, self.X.copy(), self.Y.copy(), self.AGE.copy()
 
     def set_sim_period(self, start: datetime, run_time:float=None) -> None:
         ''' set sim periode '''
 
         if run_time is not None:
-            self.time = run_time
+            self.run_time = run_time
 
-        self.start = (start - datetime(2000, 1, 1)).days
-        self.end = self.start + int(self.time/self.dt)
+        self.start = int((start - datetime(2000, 1, 1,0,0)).total_seconds()/(60*60)/self.dt)
+        self.end = self.start + int(self.run_time/self.dt)
 
-        self.sim_period = np.arange(self.start, self.start + int(self.time/self.dt))
+        #self.len_sim = len(range(start, end)) #self.len_sim
+        #self.start = (start - datetime(2000, 1, 1)).days
+        #self.end = self.start + int(self.time/self.dt)
+        #print(self.start,type(self.start))
+        #print(self.end,type(self.end))
+        self.sim_period = range(self.start, self.end)
         if (not hasattr(self, 'len_sim')) or (self.len_sim != getattr(self, 'len_sim')):
             self.len_sim = len(self.sim_period)
             self.X = np.empty((self.len_sim,), np.double)
