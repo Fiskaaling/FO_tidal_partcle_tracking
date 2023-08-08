@@ -82,9 +82,7 @@ class agent_simulation:
 
         end = start + int(self.run_time/self.dt)
         len_sim = len(range(start, end)) #self.len_sim
-        import IPython
-        IPython.embed()
-        exit()
+
         #=================================
         xi_old, yi_old = 0, 0
         self.X = []
